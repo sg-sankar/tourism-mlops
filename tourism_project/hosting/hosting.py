@@ -2,7 +2,9 @@ from huggingface_hub import HfApi
 import os
 
 # Use hard-coded token OR env var (you prefer hard-coded)
-HF_TOKEN = "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"
+#HF_TOKEN = "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"
+HF_TOKEN = os.getenv("HF_TOKEN")
+
 
 api = HfApi(token=HF_TOKEN)
 
