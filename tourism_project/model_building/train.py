@@ -1,4 +1,3 @@
-
 # =========================
 # Data & ML libraries
 # =========================
@@ -20,18 +19,18 @@ from huggingface_hub import HfApi, create_repo
 from huggingface_hub.utils import RepositoryNotFoundError
 
 # =========================
-# MLflow setup (production)
+# MLflow setup
 # =========================
 mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("MLOps_Tourism_Training")
 
 # =========================
-# Hugging Face API
+# Hugging Face API (CI-safe)
 # =========================
-api = HfApi()
+api = HfApi(token=os.environ["HF_TOKEN"])
 
 # =========================
-# Load dataset from HF
+# Load dataset from HF Hub
 # =========================
 dataset = load_dataset("sankar-guru/tourism-dataset")
 df = dataset["train"].to_pandas()
@@ -82,7 +81,7 @@ model_pipeline = make_pipeline(preprocessor, xgb_model)
 # Hyperparameter grid
 # =========================
 param_grid = {
-    "xgbclassifier__n_estimators": [50, 100, 150],
+    "xgbclassifier__n_estimators": [50, 100],
     "xgbclassifier__max_depth": [3, 4],
     "xgbclassifier__learning_rate": [0.05, 0.1],
 }
@@ -100,7 +99,7 @@ with mlflow.start_run():
     )
     grid_search.fit(Xtrain, ytrain)
 
-    # Nested runs (professor style)
+    # Log CV results
     results = grid_search.cv_results_
     for i in range(len(results["params"])):
         with mlflow.start_run(nested=True):
@@ -127,10 +126,9 @@ with mlflow.start_run():
     })
 
     # =========================
-    # Save model
+    # Save model locally
     # =========================
-    #model_path = "best_tourism_model_v1.joblib"
-    model_path = "/content/drive/MyDrive/tourism_project/model_building/best_tourism_model_v1.joblib"
+    model_path = "best_tourism_model_v1.joblib"
 
     joblib.dump(best_model, model_path)
     mlflow.log_artifact(model_path, artifact_path="model")
@@ -152,7 +150,7 @@ with mlflow.start_run():
 
     api.upload_file(
         path_or_fileobj=model_path,
-        path_in_repo=model_path,
+        path_in_repo="best_tourism_model_v1.joblib",
         repo_id=repo_id,
         repo_type=repo_type,
     )
