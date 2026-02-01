@@ -39,7 +39,8 @@ api = HfApi(token=os.environ["HF_TOKEN"])
 # =========================
 # Load dataset from HF Hub
 # =========================
-dataset = load_dataset("sankar-guru/tourism-dataset")
+#dataset = load_dataset("sankar-guru/tourism-dataset")
+dataset = load_dataset("sankar-guru/tourism-dataset", download_mode="force_redownload")
 df = dataset["train"].to_pandas()
 
 print("Dataset loaded successfully.")
