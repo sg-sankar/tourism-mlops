@@ -16,13 +16,18 @@ jobs:
         run: |
           pip install -r tourism_project/deployment/requirements.txt
 
+      # 🔍 DEBUG: Print the exact file being executed
+      - name: Show data_register.py content (DEBUG)
+        run: |
+          echo "===== START data_register.py ====="
+          sed -n '1,200p' tourism_project/model_building/data_register.py
+          echo "===== END data_register.py ====="
+
       - name: Upload Dataset to Hugging Face Hub
-        working-directory: .
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HUGGINGFACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_HOME: /tmp/huggingface
-          DATASET_PATH: tourism_project/data
         run: |
           python tourism_project/model_building/data_register.py
 
@@ -68,3 +73,11 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Install Dependencies
+        run: |
+          pip install -r tourism_project/deployment/requirements.txt
+
+      - name: Deploy to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python tourism_project/hosting/hosting.py
