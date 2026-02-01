@@ -21,7 +21,14 @@ from huggingface_hub.utils import RepositoryNotFoundError
 # =========================
 # MLflow setup
 # =========================
-mlflow.set_tracking_uri("http://localhost:5000")
+#mlflow.set_tracking_uri("http://localhost:5000")
+#mlflow.set_experiment("MLOps_Tourism_Training")
+# Use local file storage in CI, server locally
+if os.environ.get("GITHUB_ACTIONS"):
+    mlflow.set_tracking_uri("file:./mlruns")
+else:
+    mlflow.set_tracking_uri("http://localhost:5000")
+
 mlflow.set_experiment("MLOps_Tourism_Training")
 
 # =========================
