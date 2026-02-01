@@ -7,7 +7,8 @@ repo_id = "sankar-guru/tourism-dataset"
 repo_type = "dataset"
 
 # Initialize API client (uses your HF login)
-api = HfApi(token="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")
+api = os.getenv("HF_TOKEN")
+
 
 #api = HfApi(token=os.getenv("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"))
 
