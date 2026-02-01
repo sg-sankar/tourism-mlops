@@ -7,10 +7,10 @@ repo_id = "sankar-guru/tourism-dataset"
 repo_type = "dataset"
 
 # Initialize API client (uses your HF login)
-api = os.getenv("HF_TOKEN")
+api = HfApi(token=os.environ["HF_TOKEN"])
 
 
-#api = HfApi(token=os.getenv("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"))
+
 
 # Check if dataset exists, else create
 try:
