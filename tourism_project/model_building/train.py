@@ -15,7 +15,7 @@ import joblib
 import mlflow
 
 from datasets import load_dataset
-from huggingface_hub import HfApi, create_repo
+from huggingface_hub import HfApi, create_repo, hf_hub_download
 from huggingface_hub.utils import RepositoryNotFoundError
 
 # =========================
@@ -57,7 +57,7 @@ print("Dataset loaded successfully.")
 # =========================
 target = "ProdTaken"
 
-X = df.drop(columns=[target])
+X = df.drop(columns=[target, "CustomerID", "Unnamed: 0"])
 y = df[target]
 
 Xtrain, Xtest, ytrain, ytest = train_test_split(
