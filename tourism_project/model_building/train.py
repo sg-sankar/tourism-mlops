@@ -40,8 +40,15 @@ api = HfApi(token=os.environ["HF_TOKEN"])
 # Load dataset from HF Hub
 # =========================
 #dataset = load_dataset("sankar-guru/tourism-dataset")
-dataset = load_dataset("sankar-guru/tourism-dataset", download_mode="force_redownload")
-df = dataset["train"].to_pandas()
+#dataset = load_dataset("sankar-guru/tourism-dataset", download_mode="force_redownload")
+#df = dataset["train"].to_pandas()
+# Download CSV directly from HF to bypass schema cache issues
+csv_path = hf_hub_download(
+    repo_id="sankar-guru/tourism-dataset",
+    filename="tourism.csv",
+    repo_type="dataset"
+)
+df = pd.read_csv(csv_path)
 
 print("Dataset loaded successfully.")
 
